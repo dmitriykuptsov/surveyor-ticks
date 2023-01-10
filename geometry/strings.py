@@ -53,6 +53,9 @@ class Boxes():
             
     # Complexity is O(n^2)
     def do_overlap(self):
+        # We need to apply different algorithm here
+        # Take the line from the string and check if it
+        # intersects the line from the second contour
         overlap = False
         for i in range(0, len(self.bbox) - 1):
             for j in range(i + 1, len(self.bbox)):
@@ -60,12 +63,6 @@ class Boxes():
                     self.bbox[i][1].max_x >=  self.bbox[j][1].max_x) or \
                     (self.bbox[i][1].min_y >=  self.bbox[j][1].min_y and \
                     self.bbox[i][1].max_y <=  self.bbox[j][1].max_y):
-                    #print(self.bbox[i][1])
-                    #print(self.bbox[j][1])
-                    #print("min x 1 " + str(self.bbox[i][1].min_x) + " min x 2" + str(self.bbox[j][1].min_x))
-                    #print("max x 1 " + str(self.bbox[i][1].max_x) + " max x 2" + str(self.bbox[j][1].max_x))
-                    #print("min y 1 " + str(self.bbox[i][1].min_y) + " min y 2" + str(self.bbox[j][1].min_y))
-                    #print("max y 1 " + str(self.bbox[i][1].max_y) + " max y 2" + str(self.bbox[j][1].max_y))
                     overlap = True
         return overlap
 

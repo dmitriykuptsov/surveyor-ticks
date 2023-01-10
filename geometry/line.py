@@ -1,14 +1,25 @@
+from math import sqrt
+from math import sin
+from math import cos
+from math import atan
+
 class Point3D():
     def __init__(self, x, y, z):
         self.x = x
         self.y = y
         self.z = z
 
+    def distance(self, p):
+        return sqrt((self.x - p.x)*(self.x - p.x) + \
+            (self.y - p.y)*(self.y - p.y) + \
+                (self.z - p.z)*(self.z - p.z))
+
     def __str__(self):
         return "x= " + str(self.x) + " y=" + str(self.y) + " z=" + str(self.z)
 
 class Line3D():
     def __init__(self, x1, y1, z1, x2, y2, z2):
+
         self.x1 = x1
         self.y1 = y1
         self.z1 = z1
@@ -16,6 +27,19 @@ class Line3D():
         self.x2 = x2
         self.y2 = y2
         self.z2 = z2
+
+    def point_on_line(self, d):
+        alpha = atan((self.y2 - self.y1)/(self.x2 - self.x1))
+        #l = self.length()
+        x_p = self.x1 + sin(alpha) * d
+        y_p = self.y1 + cos(alpha) * d
+        z_p = 0
+        return Point3D(x_p, y_p, z_p)
+
+    def length(self):
+        return sqrt((self.x1 - self.x2)*(self.x1 - self.x2) + \
+            (self.y1 - self.y2)*(self.y1 - self.y2) + \
+                (self.z1 - self.z2)*(self.z1 - self.z2))
 
     def intersection(self, l2, p):
 
