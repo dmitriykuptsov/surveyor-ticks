@@ -29,11 +29,12 @@ class Line3D():
         self.z2 = z2
 
     def point_on_line(self, d):
+        beta = atan((self.z2 - self.z1)/(self.y2 - self.y1))
         alpha = atan((self.y2 - self.y1)/(self.x2 - self.x1))
-        #l = self.length()
-        x_p = self.x1 + sin(alpha) * d
-        y_p = self.y1 + cos(alpha) * d
-        z_p = 0
+        z_p = self.z1 + cos(beta) * d
+        d_r = sin(beta) * d
+        x_p = self.x1 + sin(alpha) * d_r
+        y_p = self.y1 + cos(alpha) * d_r
         return Point3D(x_p, y_p, z_p)
 
     def length(self):
