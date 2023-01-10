@@ -156,7 +156,7 @@ class Line3D():
             c2 = (l2.z1 - p.z + mu * c1) / mu
         return Point3D(p.x + a2, p.y + b2, p.z + c2)
 
-
+"""
 print("Doing tests...")
 print("Case 1")
 l1 = Line3D(2, 2, 0, 1, 4, 0)
@@ -211,3 +211,4 @@ p = Point3D(2.5, 1, 3)
 p = l1.intersection(l2, p)
 if p != False:
     print(p)
+"""
