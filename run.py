@@ -66,6 +66,7 @@ b = boxes.get_boxes()
 if len(b) % 2 != 0:
     print("Number of contours is not even. Continue?")
 
+line_counter = 0
 ticks = []
 # Complexity O(nmk)
 # Where n is the number of contours
@@ -77,43 +78,52 @@ for i in range(0, len(b), 2):
     offset = 0
     j = 1
     while j < len(s1.get_points()):
+
         p1 = s1.get_points()[j - 1]
         p2 = s1.get_points()[j]
         line1 = line.Line3D(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z)
         min_distance = math.inf
         optimal_line = None
 
+        if offset > line1.length():
+            offset -= line1.length()
+            j += 1
+            continue
+        
         mark_point = line1.point_on_line(offset)
-        #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        #print("Current fragment: " + str(line1))
-        #print("Mark point: " + str(mark_point))
-        #print("------")
         for k in range(1, len(s2.get_points())):
             p21 = s2.get_points()[k - 1]
             p22 = s2.get_points()[k]
-            line2 = line.Line3D(p21.x, p21.y, p21.z, p22.x, p22.y, p22.z)
-            #print(line2)
+            line2 = line.Line3D(p21.x, p21.y, p21.z, p22.x, p22.y, p22.z)            
             pi = line1.intersection(line2, mark_point)
             if pi != False:
                 line3 = line.Line3D(mark_point.x, mark_point.y, mark_point.z, pi.x, pi.y, pi.z)
-                #print("---- FOUND  INTERSECTION ------- ")
-                #print(line3)
-                #print("=================================")
                 if line3.length() < min_distance:
                     optimal_line = line3
                     min_distance = line3.length()
 
         if optimal_line:
-            #print("0000000000000000000")
-            #print(optimal_line)
-            #print("0000000000000000000")
-            ticks.append(optimal_line)
+            if line_counter % 2 == 0:
+                ticks.append(optimal_line)
+            else:
+                print("---------------")
+                optimal_line_length = optimal_line.length() / 2
+                print(optimal_line_length)
+                mid_point = optimal_line.point_on_line(optimal_line_length)                
+                half_line = line.Line3D(optimal_line.x1, optimal_line.y1, optimal_line.y1, mid_point.x, mid_point.y, mid_point.z)
+                print(optimal_line)
+                print(mid_point)
+                print(half_line)
+                print("+++++++++++++++")
+                ticks.append(half_line)
+            #line_counter += 1
         
         if line1.length() - (offset + step) >= 0:
             offset += step
         else:
             offset = (offset + step) - line1.length()
             j += 1
+    break
 
 fd = open(output_file, "w")
 fd.write("X;Y;Z;JOIN\n")
