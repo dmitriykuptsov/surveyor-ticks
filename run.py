@@ -26,6 +26,8 @@ from sys import argv
 from geometry import line
 from geometry import strings
 
+import matplotlib.pyplot as plt
+
 import math
 
 if len(argv) < 3:
@@ -133,3 +135,36 @@ for line in ticks:
     fd.write(str(line.x2) + ";" + str(line.y2) + ";" + str(line.z2) + ";" + str(idx) + "\n")
     idx += 1
 fd.close()
+
+
+
+fig = plt.figure()
+ax = plt.axes(projection ='3d')
+
+for j in range(0, boxes.length()):
+    s1 = boxes.get_strings(j)
+    X = []
+    Y = []
+    Z = []
+    for i in range(0, len(s1.get_points())):
+        p1 = s1.get_points()[i]
+        X.append(p1.x)
+        Y.append(p1.y)
+        Z.append(p1.z)
+
+    ax.plot3D(X, Y, Z, 'green')
+
+for line in ticks:
+    X = []
+    Y = []
+    Z = []
+    X.append(line.x1)
+    X.append(line.x2)
+    Y.append(line.y1)
+    Y.append(line.y2)
+    Z.append(line.z1)
+    Z.append(line.z2)
+    ax.plot3D(X, Y, Z, 'red')
+
+ax.set_title('Surveyor ticks drawing')
+plt.show()

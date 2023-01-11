@@ -85,5 +85,8 @@ class Boxes():
     def get_boxes(self):
         return self.bbox
 
+    def length(self):
+        return len(self.bbox)
+
     def get_strings(self, idx):
         return self.strings[idx]
