@@ -90,6 +90,7 @@ for i in range(0, len(b), 2):
             j += 1
             continue
         
+        # point_on_line is kind of sloppy - does not work as needed
         mark_point = line1.point_on_line(offset)
         for k in range(1, len(s2.get_points())):
             p21 = s2.get_points()[k - 1]
@@ -123,7 +124,6 @@ for i in range(0, len(b), 2):
         else:
             offset = (offset + step) - line1.length()
             j += 1
-    break
 
 fd = open(output_file, "w")
 fd.write("X;Y;Z;JOIN\n")

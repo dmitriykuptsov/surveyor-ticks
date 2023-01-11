@@ -57,10 +57,6 @@ class Line3D():
         else:
             alpha = pi/2
 
-        #print("Beta = " + str(beta))
-        #print("Alpha = " + str(alpha))
-        #print("r = " + str(r))
-
         sign = 1
 
         if sqrt(self.x2 * self.x2 + self.y2 * self.y2 + self.z2 * self.z2) < sqrt(self.x1 * self.x1 + self.y1 * self.y1 + self.z1 * self.z1):
