@@ -2,6 +2,7 @@ from math import sqrt
 from math import sin
 from math import cos
 from math import atan
+from math import pi
 
 class Point3D():
     def __init__(self, x, y, z):
@@ -27,14 +28,44 @@ class Line3D():
         self.x2 = x2
         self.y2 = y2
         self.z2 = z2
+    
+    def __str__(self):
+        return str("Line3D: x1=" + str(self.x1) + " y1=" + str(self.y1) + " z1=" + str(self.z1) + " x2=" + str(self.x2) + " y2=" + str(self.y2) + " z2=" + str(self.z2))
+
+    def is_point_on_the_line(self, p):
+
+        a = self.x2 - self.x1
+        b = self.y2 - self.y1
+        c = self.z2 - self.z1
+
+        l1 = (p.x - self.x1) / a
+        l2 = (p.y - self.y1) / b
+        l3 = (p.z - self.z1) / c
+
+        return (l1 == l2 and l2 == l3)
+
 
     def point_on_line(self, d):
-        beta = atan((self.z2 - self.z1)/(self.y2 - self.y1))
-        alpha = atan((self.y2 - self.y1)/(self.x2 - self.x1))
-        z_p = self.z1 + cos(beta) * d
-        d_r = sin(beta) * d
-        x_p = self.x1 + sin(alpha) * d_r
-        y_p = self.y1 + cos(alpha) * d_r
+        if d == 0:
+            return Point3D(self.x1, self.y1, self.z1)
+        
+        r = sqrt((self.x2 - self.x1)*(self.x2 - self.x1) + (self.y2 - self.y1)*(self.y2 - self.y1))
+
+        beta = atan((self.z2 - self.z1)/r)
+        if self.x2 - self.x1 != 0:
+            alpha = atan((self.y2 - self.y1)/(self.x2 - self.x1))
+        else:
+            alpha = pi/2
+
+        #print("Beta = " + str(beta))
+        #print("Alpha = " + str(alpha))
+        #print("r = " + str(r))
+
+        r2 = cos(beta) * d
+        z_p = self.z1 + sin(beta) * d
+        x_p = self.x1 + cos(alpha) * r2
+        y_p = self.y1 + sin(alpha) * r2
+
         return Point3D(x_p, y_p, z_p)
 
     def length(self):
@@ -77,7 +108,7 @@ class Line3D():
                     return False
                 b2 -= p.y
         elif self.y1 - self.y2 == 0 and l2.x1 - l2.x2 != 0:
-            # CASE 2
+            # CASE 2 WORKS
             if (l2.y1 - l2.y2) == 0:
                 if (l2.x1 <= p.x and l2.x2 >= p.x):
                     a2 = p.x - x2
@@ -110,7 +141,7 @@ class Line3D():
                     return False
                 b2 -= p.y
         elif l2.y1 - l2.y2 == 0 and self.x1 - self.x2 != 0:
-            # CASE 4
+            # CASE 4 WORKS
             if (self.y1 - self.y2) == 0:
                 if (l2.x1 <= p.x and l2.x2 >= p.x):
                     a2 = p.x - x2
@@ -132,8 +163,12 @@ class Line3D():
             return False
         elif l2.x1 - l2.x2 == 0 and self.x1 - self.x2 == 0:
             return False
+        elif self.x1 - self.x2 == 0 and l2.y1 - l2.y2 == 0:
+            return False
+        elif l2.x1 - l2.x2 == 0 and self.y1 - self.y2 == 0:
+            return False
         else:
-            # Case 5 WORKS
+            # Case 5 WORKS WORKS
             m1 = (self.y2 - self.y1) / (self.x2 - self.x1)
             m2 = (l2.y2 - l2.y1) / (l2.x2 - l2.x1)
             if m1 == 0:

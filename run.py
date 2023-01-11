@@ -1,13 +1,40 @@
+#!/usr/bin/python3
+
+# Copyright (C) 2023 Micromine
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+__author__ = "Dmitriy Kuptsov"
+__copyright__ = "Copyright 2023, Micromine"
+__license__ = "GPL"
+__version__ = "0.0.1a"
+__maintainer__ = "Dmitriy Kuptsov"
+__email__ = "dkuptsov@micromine.com"
+__status__ = "development"
+
 from sys import argv
 from geometry import line
 from geometry import strings
 
+import math
+
 if len(argv) < 3:
-    print("Usage: python run.py data/input.csv [step]")
+    print("Usage: python run.py input_file output_file step")
     exit()
 
 strings_file = argv[1]
-step = float(argv[2])
+output_file = argv[2]
+step = float(argv[3])
 fd = open(strings_file)
 lines = fd.readlines()
 
@@ -34,18 +61,55 @@ boxes = strings.Boxes(strings_)
 print("Do contours overlap? " + str(boxes.do_overlap()))
 boxes.sort()
 
+
+b = boxes.get_boxes()
+if len(b) % 2 != 0:
+    print("Number of contours is not even. Continue?")
+
+ticks = []
 # Complexity O(nmk)
 # Where n is the number of contours
 # m is the average number strings in first contour
 # k is the average number of strings in the second contour
-b = boxes.get_boxes()
 for i in range(0, len(b), 2):
-    #print(box[1])
     s1 = boxes.get_strings(i)
     s2 = boxes.get_strings(i + 1)
     offset = 0
-    for j in range(1, len(s1.get_points())):
+    j = 1
+    while j < len(s1.get_points()):
         p1 = s1.get_points()[j - 1]
         p2 = s1.get_points()[j]
-        
+        line1 = line.Line3D(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z)
+        min_distance = math.inf
+        optimal_line = None
 
+        mark_point = line1.point_on_line(offset)
+        #print("------")
+        for k in range(1, len(s2.get_points())):
+            p21 = s2.get_points()[k - 1]
+            p22 = s2.get_points()[k]
+            line2 = line.Line3D(p21.x, p21.y, p21.z, p22.x, p22.y, p22.z)
+            #print(line2)
+
+            pi = line1.intersection(line2, mark_point)
+            if pi != False:
+                line3 = line.Line3D(mark_point.x, mark_point.y, mark_point.z, pi.x, pi.y, pi.z)
+                if line3.length() < min_distance:
+                    optimal_line = line3
+                    min_distance = line3.length()
+        if optimal_line:
+            ticks.append(optimal_line)
+        if line1.length() - (offset + step) >= 0:
+            offset += step
+        else:
+            offset = (offset + step) - line1.length()
+            j += 1
+
+fd = open(output_file, "w")
+fd.write("X;Y;Z;JOIN\n")
+idx = 1
+for line in ticks:
+    fd.write(str(line.x1) + ";" + str(line.y1) + ";" + str(line.z1) + ";" + str(idx) + "\n")
+    fd.write(str(line.x2) + ";" + str(line.y2) + ";" + str(line.z2) + ";" + str(idx) + "\n")
+    idx += 1
+fd.close()
