@@ -1,7 +1,7 @@
 from math import sqrt
 from math import sin
 from math import cos
-from math import atan
+from math import atan2
 from math import pi
 
 class Point3D():
@@ -51,22 +51,24 @@ class Line3D():
         
         r = sqrt((self.x2 - self.x1)*(self.x2 - self.x1) + (self.y2 - self.y1)*(self.y2 - self.y1))
 
-        beta = atan((self.z2 - self.z1)/r)
-        if self.x2 - self.x1 != 0:
-            alpha = atan((self.y2 - self.y1)/(self.x2 - self.x1))
-        else:
-            alpha = pi/2
+        beta = atan2((self.z2 - self.z1), r)
+        alpha = atan2((self.y2 - self.y1),(self.x2 - self.x1))
 
-        sign = 1
-
-        if sqrt(self.x2 * self.x2 + self.y2 * self.y2 + self.z2 * self.z2) < sqrt(self.x1 * self.x1 + self.y1 * self.y1 + self.z1 * self.z1):
-            sign = -1
-
-        r2 = cos(beta) * d
+        x_sign = 1
+        if self.x2 < self.x1:
+            x_sign = -1
+        y_sign = 1
+        if self.y2 < self.y1:
+            y_sign = -1
+        z_sign = 1
+        if self.z2 < self.z1:
+            z_sign = -1
         
-        z_p = self.z1 + sign * sin(beta) * d
-        x_p = self.x1 + sign * cos(alpha) * r2
-        y_p = self.y1 + sign * sin(alpha) * r2
+        r2 = cos(beta) * d
+        print("d = " + str(d) + " r2 = " + str(r2))  
+        z_p = self.z1 + z_sign * sin(beta) * d
+        x_p = self.x1 + x_sign * cos(alpha) * r2
+        y_p = self.y1 + y_sign * sin(alpha) * r2
 
         return Point3D(x_p, y_p, z_p)
 

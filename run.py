@@ -90,14 +90,21 @@ for i in range(0, len(b), 2):
         if offset > line1.length():
             offset -= line1.length()
             j += 1
+            print("Skipping: " + str(line1))
             continue
         
-        # point_on_line is kind of sloppy - does not work as needed
+        # point_on_line is kind of sloppy - does not work as needed        
+        print("-----------------")
         mark_point = line1.point_on_line(offset)
+        print("Mark point: " + str(mark_point))
+        print("Original line: " + str(line1))
+        print("Offset: " + str(offset))
+        print("Line 1 length: " + str(line1.length()))
+        print("-----------------")
         for k in range(1, len(s2.get_points())):
             p21 = s2.get_points()[k - 1]
             p22 = s2.get_points()[k]
-            line2 = line.Line3D(p21.x, p21.y, p21.z, p22.x, p22.y, p22.z)            
+            line2 = line.Line3D(p21.x, p21.y, p21.z, p22.x, p22.y, p22.z)      
             pi = line1.intersection(line2, mark_point)
             if pi != False:
                 line3 = line.Line3D(mark_point.x, mark_point.y, mark_point.z, pi.x, pi.y, pi.z)
