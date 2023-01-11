@@ -84,21 +84,31 @@ for i in range(0, len(b), 2):
         optimal_line = None
 
         mark_point = line1.point_on_line(offset)
+        #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        #print("Current fragment: " + str(line1))
+        #print("Mark point: " + str(mark_point))
         #print("------")
         for k in range(1, len(s2.get_points())):
             p21 = s2.get_points()[k - 1]
             p22 = s2.get_points()[k]
             line2 = line.Line3D(p21.x, p21.y, p21.z, p22.x, p22.y, p22.z)
             #print(line2)
-
             pi = line1.intersection(line2, mark_point)
             if pi != False:
                 line3 = line.Line3D(mark_point.x, mark_point.y, mark_point.z, pi.x, pi.y, pi.z)
+                #print("---- FOUND  INTERSECTION ------- ")
+                #print(line3)
+                #print("=================================")
                 if line3.length() < min_distance:
                     optimal_line = line3
                     min_distance = line3.length()
+
         if optimal_line:
+            #print("0000000000000000000")
+            #print(optimal_line)
+            #print("0000000000000000000")
             ticks.append(optimal_line)
+        
         if line1.length() - (offset + step) >= 0:
             offset += step
         else:
