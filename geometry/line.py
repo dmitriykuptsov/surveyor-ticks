@@ -53,6 +53,9 @@ class Line3D():
 
         beta = atan2((self.z2 - self.z1), r)
         alpha = atan2((self.y2 - self.y1),(self.x2 - self.x1))
+        
+        #print("alpha = " + str(alpha))
+        #print("beta = " + str(beta))
 
         x_sign = 1
         if self.x2 < self.x1:
@@ -64,11 +67,11 @@ class Line3D():
         if self.z2 < self.z1:
             z_sign = -1
         
-        r2 = cos(beta) * d
-        print("d = " + str(d) + " r2 = " + str(r2))  
-        z_p = self.z1 + z_sign * sin(beta) * d
-        x_p = self.x1 + x_sign * cos(alpha) * r2
-        y_p = self.y1 + y_sign * sin(alpha) * r2
+        r2 = abs(cos(beta)) * d
+        #print("d = " + str(d) + " r2 = " + str(r2))  
+        z_p = self.z1 + z_sign * abs(sin(beta)) * d
+        x_p = self.x1 + x_sign * abs(cos(alpha)) * r2
+        y_p = self.y1 + y_sign * abs(sin(alpha)) * r2
 
         return Point3D(x_p, y_p, z_p)
 
