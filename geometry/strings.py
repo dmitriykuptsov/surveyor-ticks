@@ -21,6 +21,8 @@ class String():
         max_x = 0
         min_y = math.inf
         max_y = 0
+        min_z = math.inf
+        max_z = 0
         for p in self.points:
             if p.x < min_x:
                 min_x = p.x
@@ -30,14 +32,20 @@ class String():
                 max_x = p.x
             if p.y > max_y:
                 max_y = p.y
-        return Box(min_x, min_y, max_x, max_y)
+            if p.z > max_z:
+                max_z = p.z
+            if p.z < min_z:
+                min_z = p.z
+        return Box(min_x, min_y, max_x, max_y, min_z, max_z)
 
 class Box():
-    def __init__(self, min_x, min_y, max_x, max_y):
+    def __init__(self, min_x, min_y, max_x, max_y, min_z, max_z):
         self.min_x = min_x
         self.max_x = max_x
         self.min_y = min_y
         self.max_y = max_y
+        self.max_z = max_z
+        self.min_z = min_z
     
     def __str__(self):
         return "min_x = " + str(self.min_x) + " min_y = " + str(self.min_y) + " max_x = " + str(self.max_x) + " max_y = " + str(self.max_y)
@@ -62,7 +70,7 @@ class Boxes():
                 if (self.bbox[i][1].min_x >=  self.bbox[j][1].min_x and \
                     self.bbox[i][1].max_x >=  self.bbox[j][1].max_x) or \
                     (self.bbox[i][1].min_y >=  self.bbox[j][1].min_y and \
-                    self.bbox[i][1].max_y <=  self.bbox[j][1].max_y):
+                    self.bbox[i][1].max_y >=  self.bbox[j][1].max_y):
                     overlap = True
         return overlap
 
@@ -77,6 +85,11 @@ class Boxes():
                     tmp = self.bbox[i]
                     self.bbox[i] = self.bbox[j]
                     self.bbox[j] = tmp
+                    tmp = self.strings[i]
+                    self.strings[i] = self.strings[j]
+                    self.strings[j] = tmp
+
+
 
     def iterate(self):
         for box in self.bbox:

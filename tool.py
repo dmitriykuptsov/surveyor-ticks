@@ -82,11 +82,11 @@ class GUI(QWidget):
 
    def runAlgorithm(self):
 
-      if not re.match("[a-zA-Z0-9\_\-]+\.csv", self.output_file_name_txb.text().strip()):
+      if not re.match("[a-zA-Z0-9\_\-\ \(\)]+\.csv", self.output_file_name_txb.text().strip()):
          QMessageBox.question(self, 'Micromine', "Wrong output file name! Must be a valid .csv file", QMessageBox.Ok, QMessageBox.Ok)
          return
       print(os.path.basename(self.contours_file.strip()))
-      if not re.match("[a-zA-Z0-9\_\-]+\.csv", os.path.basename(self.contours_file.strip())):
+      if not re.match("[a-zA-Z0-9\_\-\ \(\)]+\.csv", os.path.basename(self.contours_file.strip())):
          QMessageBox.question(self, 'Micromine', "Wrong input file name! Must be a valid .csv file", QMessageBox.Ok, QMessageBox.Ok)
          return
 
@@ -101,11 +101,11 @@ class GUI(QWidget):
          step = 1.0
       result = algo.run(input_file, output_file, step)
       if not result[0]:
-         if result[1] == CONTOURS_ARE_NOT_CLOSED_ERROR:
+         if result[1] == algo.CONTOURS_ARE_NOT_CLOSED_ERROR:
             QMessageBox.question(self, 'Micromine', "Contours are not closed", QMessageBox.Ok, QMessageBox.Ok)
-         elif result[1] == NOT_EVEN_NUMBER_OF_CONTOURS:
+         elif result[1] == algo.NOT_EVEN_NUMBER_OF_CONTOURS:
             QMessageBox.question(self, 'Micromine', "Number of contours must be even", QMessageBox.Ok, QMessageBox.Ok)
-         elif result[1] == CONTOURS_OVERLAP:
+         elif result[1] == algo.CONTOURS_OVERLAP:
             QMessageBox.question(self, 'Micromine', "Contours overlap!", QMessageBox.Ok, QMessageBox.Ok)
       else:
          QMessageBox.question(self, 'Micromine', "Algorithm completed successfully", QMessageBox.Ok, QMessageBox.Ok)
@@ -131,5 +131,5 @@ def main():
    ex.show()
    sys.exit(app.exec_())
 	
-if __name__ == '__main__':
-   main()
+#if __name__ == '__main__':
+main()
