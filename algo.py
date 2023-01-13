@@ -30,6 +30,12 @@ import matplotlib.pyplot as plt
 
 import math
 
+"""
+if len(argv) < 3:
+    print("Usage: python run.py input_file output_file step")
+    exit()
+"""
+
 NO_ERROR = 0x0
 CONTOURS_ARE_NOT_CLOSED_ERROR = 0x2
 NOT_EVEN_NUMBER_OF_CONTOURS = 0x4
@@ -37,6 +43,9 @@ CONTOURS_OVERLAP = 0x8
 
 
 def run(strings_file, output_file, step):
+    #strings_file = argv[1]
+    #output_file = argv[2]
+    #step = float(argv[3])
 
     step = float(step)
     fd = open(strings_file)
@@ -100,8 +109,17 @@ def run(strings_file, output_file, step):
             if offset > line1.length():
                 offset -= line1.length()
                 j += 1
+                #print("Skipping: " + str(line1))
                 continue
             
+            # point_on_line is kind of sloppy - does not work as needed        
+            #print("-----------------")
+            mark_point = line1.point_on_line(offset)
+            #print("Mark point: " + str(mark_point))
+            #print("Original line: " + str(line1))
+            #print("Offset: " + str(offset))
+            #print("Line 1 length: " + str(line1.length()))
+            #print("-----------------")
             for k in range(1, len(s2.get_points())):
                 p21 = s2.get_points()[k - 1]
                 p22 = s2.get_points()[k]
@@ -117,9 +135,21 @@ def run(strings_file, output_file, step):
                 if line_counter % 2 == 0:
                     ticks.append(optimal_line)
                 else:
+                    #print("---------------")
                     optimal_line_length = optimal_line.length() / 2
+                    #print("Optimal line length")
+                    #print(optimal_line_length)
                     mid_point = optimal_line.point_on_line(optimal_line_length)                
                     half_line = line.Line3D(optimal_line.x1, optimal_line.y1, optimal_line.z1, mid_point.x, mid_point.y, mid_point.z)
+                    #print("Optimal line:")
+                    #print(optimal_line)
+                    #print("Mid point:")
+                    #print(mid_point)
+                    #print("Half line:")
+                    #print(half_line)
+                    #print("Half line length:")
+                    #print(half_line.length())
+                    #print("+++++++++++++++")
                     ticks.append(half_line)
                 line_counter += 1
             
