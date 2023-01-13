@@ -96,7 +96,7 @@ class GUI(QWidget):
       input_file = self.contours_file.strip()
       output_file = os.path.join(self.output_folder, self.output_file_name_txb.text().strip())
       try:
-         step = float(self.step_txb.getText().strip())
+         step = float(self.step_txb.text().strip())
       except:
          step = 1.0
       result = algo.run(input_file, output_file, step)
